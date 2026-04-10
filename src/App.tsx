@@ -79,12 +79,123 @@ const MOCK_DASHBOARD_DATA = {
 const MOCK_HISTORY = [
   { id: 'CASE-8902', patient: 'Anonymous-F', mutation: 'MLH1 c.1852_1854delAAG', date: '2026-04-08', risk: 'High', status: 'Finalized' },
   { id: 'CASE-8895', patient: 'Anonymous-G', mutation: 'CFTR p.Phe508del', date: '2026-04-07', risk: 'Critical', status: 'Finalized' },
+  { id: 'CASE-8890', patient: 'Anonymous-H', mutation: 'LDLR p.Glu101Lys', date: '2026-04-06', risk: 'High', status: 'Finalized' },
   { id: 'CASE-8821', patient: 'Anonymous-A', mutation: 'BRCA1 c.68_69delAG', date: '2026-04-05', risk: 'Critical', status: 'Finalized' },
   { id: 'CASE-8819', patient: 'Anonymous-B', mutation: 'TP53 p.R248Q', date: '2026-04-03', risk: 'High', status: 'Finalized' },
   { id: 'CASE-8815', patient: 'Anonymous-C', mutation: 'EGFR L858R', date: '2026-04-01', risk: 'Moderate', status: 'Pending Review' },
   { id: 'CASE-8798', patient: 'Anonymous-D', mutation: 'KRAS G12D', date: '2026-03-28', risk: 'High', status: 'Finalized' },
-  { id: 'CASE-8782', patient: 'Anonymous-E', mutation: 'PTEN p.R130*', date: '2026-03-25', risk: 'Critical', status: 'Finalized' },
 ];
+
+const MOCK_LYNCH_RESULT: AnalysisResult = {
+  mutationAnalysis: {
+    gene: "MLH1",
+    mutation: "c.1852_1854delAAG",
+    impact: "This deletion causes a frameshift mutation in the MLH1 gene, leading to a truncated and non-functional protein.",
+    proteinEffect: "The MLH1 protein is a key component of the DNA mismatch repair (MMR) complex. This mutation disrupts its ability to bind with PMS2, effectively disabling the MMR system.",
+    pathways: ["DNA Mismatch Repair", "Cell Cycle Regulation", "Genomic Stability"],
+    diseases: [
+      { name: "Lynch Syndrome", riskScore: 0.95, description: "Hereditary non-polyposis colorectal cancer (HNPCC)." },
+      { name: "Colorectal Cancer", riskScore: 0.85, description: "High risk of early-onset colorectal adenocarcinoma." },
+      { name: "Endometrial Cancer", riskScore: 0.45, description: "Increased risk in female patients." }
+    ]
+  },
+  clinicalIntelligence: {
+    primaryDiagnosis: "Lynch Syndrome (MLH1-associated)",
+    severity: "High",
+    confidenceScore: 98,
+    redFlags: ["MSI-High Status", "Early-onset Family History", "Abdominal Pain"],
+    decisionSupport: {
+      evidenceLevel: "Level 1",
+      acmgClassification: "Pathogenic",
+      differentialDiagnosis: ["Constitutional Mismatch Repair Deficiency (CMMRD)", "Muir-Torre Syndrome"],
+      clinicalActionability: "Immediate referral to genetic counseling and high-frequency colonoscopy (every 1-2 years) is indicated."
+    },
+    recommendations: {
+      drugs: [
+        { name: "Pembrolizumab", target: "PD-1", sideEffects: ["Fatigue", "Rash", "Colitis"] },
+        { name: "Aspirin", target: "COX-1/2", sideEffects: ["GI Bleed", "Tinnitus"] }
+      ],
+      lifestyle: ["High-fiber diet", "Regular physical activity", "Smoking cessation"],
+      screenings: ["Colonoscopy every 12 months", "Endometrial biopsy (annual)", "Transvaginal ultrasound"]
+    },
+    explanation: "The patient presents with a pathogenic deletion in MLH1 and MSI-H status, which are hallmarks of Lynch Syndrome. The molecular disruption of the MMR pathway leads to rapid accumulation of mutations, significantly increasing cancer risk.",
+    patientSummary: "Your genetic test shows a change in the MLH1 gene. This means your body has a harder time fixing small errors in your DNA. This condition, called Lynch Syndrome, increases the risk of certain cancers, but with regular check-ups and the right care plan, we can manage these risks effectively."
+  }
+};
+
+const MOCK_CF_RESULT: AnalysisResult = {
+  mutationAnalysis: {
+    gene: "CFTR",
+    mutation: "p.Phe508del",
+    impact: "This classic deletion of phenylalanine at position 508 leads to severe misfolding of the CFTR protein.",
+    proteinEffect: "The misfolded CFTR protein is recognized by cellular quality control mechanisms and degraded in the endoplasmic reticulum, preventing it from reaching the cell surface to function as a chloride channel.",
+    pathways: ["Ion Transport", "Protein Folding & Trafficking", "Mucociliary Clearance"],
+    diseases: [
+      { name: "Cystic Fibrosis", riskScore: 0.99, description: "Multisystem disorder affecting lungs, pancreas, and sweat glands." },
+      { name: "Bronchiectasis", riskScore: 0.90, description: "Permanent enlargement of parts of the airways of the lung." },
+      { name: "Pancreatic Insufficiency", riskScore: 0.80, description: "Inability of the pancreas to produce enough enzymes for digestion." }
+    ]
+  },
+  clinicalIntelligence: {
+    primaryDiagnosis: "Cystic Fibrosis (Classic Phenotype)",
+    severity: "Critical",
+    confidenceScore: 100,
+    redFlags: ["Sweat Chloride > 60 mmol/L", "Recurrent Pseudomonas infections", "Failure to thrive"],
+    decisionSupport: {
+      evidenceLevel: "Level 1",
+      acmgClassification: "Pathogenic",
+      differentialDiagnosis: ["Primary Ciliary Dyskinesia", "Shwachman-Diamond Syndrome"],
+      clinicalActionability: "Immediate initiation of CFTR modulator therapy (e.g., Elexacaftor/Tezacaftor/Ivacaftor) and referral to a CF care center."
+    },
+    recommendations: {
+      drugs: [
+        { name: "Trikafta", target: "CFTR Protein", sideEffects: ["Liver enzyme elevation", "Abdominal pain"] },
+        { name: "Tobramycin (Inhaled)", target: "Bacterial Ribosome", sideEffects: ["Voice alteration", "Tinnitus"] }
+      ],
+      lifestyle: ["High-calorie diet", "Chest physiotherapy", "Airway clearance techniques"],
+      screenings: ["Sputum culture (quarterly)", "Pulmonary function tests", "Abdominal ultrasound"]
+    },
+    explanation: "The p.Phe508del mutation is the most common cause of CF. It results in a 'Class II' defect where the protein never reaches the cell membrane, leading to thick mucus and systemic complications.",
+    patientSummary: "Your test confirms Cystic Fibrosis caused by the common F508del mutation. This means your body's salt-moving system doesn't work correctly, leading to thick mucus in the lungs and digestive system. Modern 'modulator' drugs can now target the root cause of this protein error."
+  }
+};
+
+const MOCK_FH_RESULT: AnalysisResult = {
+  mutationAnalysis: {
+    gene: "LDLR",
+    mutation: "p.Glu101Lys",
+    impact: "A missense mutation in the ligand-binding domain of the LDL receptor.",
+    proteinEffect: "This mutation reduces the receptor's affinity for LDL particles, significantly impairing the liver's ability to clear 'bad' cholesterol from the bloodstream.",
+    pathways: ["Lipid Metabolism", "Receptor-Mediated Endocytosis", "Cholesterol Homeostasis"],
+    diseases: [
+      { name: "Familial Hypercholesterolemia", riskScore: 0.92, description: "Genetic disorder characterized by very high LDL cholesterol levels." },
+      { name: "Coronary Artery Disease", riskScore: 0.75, description: "Early-onset atherosclerosis and heart disease risk." },
+      { name: "Xanthomatosis", riskScore: 0.40, description: "Cholesterol deposits in tendons or skin." }
+    ]
+  },
+  clinicalIntelligence: {
+    primaryDiagnosis: "HeFH (Heterozygous Familial Hypercholesterolemia)",
+    severity: "High",
+    confidenceScore: 95,
+    redFlags: ["LDL-C > 190 mg/dL", "Family history of early MI", "Tendon Xanthomas"],
+    decisionSupport: {
+      evidenceLevel: "Level 1",
+      acmgClassification: "Pathogenic",
+      differentialDiagnosis: ["Sitosterolemia", "Lysosomal Acid Lipase Deficiency"],
+      clinicalActionability: "Aggressive lipid-lowering therapy required to reach LDL-C goal < 70 mg/dL (or 50% reduction)."
+    },
+    recommendations: {
+      drugs: [
+        { name: "Atorvastatin", target: "HMG-CoA Reductase", sideEffects: ["Myalgia", "Liver enzyme elevation"] },
+        { name: "Evolocumab (PCSK9i)", target: "PCSK9", sideEffects: ["Injection site reaction", "Nasopharyngitis"] }
+      ],
+      lifestyle: ["Heart-healthy diet (DASH/Mediterranean)", "Aerobic exercise 150min/week", "Weight management"],
+      screenings: ["Lipid panel every 3 months", "Carotid intima-media thickness", "Cardiac CT (Calcium score)"]
+    },
+    explanation: "The LDLR mutation prevents efficient removal of LDL from circulation. This leads to lifelong exposure to high cholesterol, accelerating plaque buildup in the arteries from a young age.",
+    patientSummary: "You have a genetic condition called FH that makes your cholesterol very high, regardless of diet. Your liver can't 'grab' the cholesterol out of your blood effectively. Starting treatment early is the best way to protect your heart and prevent future issues."
+  }
+};
 
 const CLINICAL_SAMPLES = [
   {
@@ -92,21 +203,24 @@ const CLINICAL_SAMPLES = [
     mutation: "MLH1 c.1852_1854delAAG",
     symptoms: "History of early-onset colorectal cancer in family, persistent abdominal pain",
     lab: "Microsatellite Instability (MSI-H) detected in biopsy",
-    icon: ShieldAlert
+    icon: ShieldAlert,
+    result: MOCK_LYNCH_RESULT
   },
   {
     name: "Cystic Fibrosis",
     mutation: "CFTR p.Phe508del",
     symptoms: "Chronic cough, recurrent lung infections, salty-tasting skin",
     lab: "Sweat chloride test: 85 mmol/L",
-    icon: Activity
+    icon: Activity,
+    result: MOCK_CF_RESULT
   },
   {
     name: "FH (Cholesterol)",
     mutation: "LDLR p.Glu101Lys",
     symptoms: "Xanthomas on Achilles tendon, early-onset CAD",
     lab: "LDL-C: 280 mg/dL",
-    icon: HeartPulse
+    icon: HeartPulse,
+    result: MOCK_FH_RESULT
   }
 ];
 
@@ -114,11 +228,11 @@ type View = 'overview' | 'analysis' | 'dashboard' | 'history';
 
 export default function App() {
   const [activeView, setActiveView] = useState<View>('analysis');
-  const [mutation, setMutation] = useState('BRCA1 c.68_69delAG');
-  const [symptoms, setSymptoms] = useState('Family history of breast cancer, fatigue');
-  const [labValues, setLabValues] = useState('Elevated CA-125');
+  const [mutation, setMutation] = useState('MLH1 c.1852_1854delAAG');
+  const [symptoms, setSymptoms] = useState('History of early-onset colorectal cancer in family, persistent abdominal pain');
+  const [labValues, setLabValues] = useState('Microsatellite Instability (MSI-H) detected in biopsy');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [result, setResult] = useState<AnalysisResult | null>(MOCK_LYNCH_RESULT);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'doctor' | 'patient'>('doctor');
 
@@ -407,6 +521,9 @@ export default function App() {
                               setMutation(sample.mutation);
                               setSymptoms(sample.symptoms);
                               setLabValues(sample.lab);
+                              if ('result' in sample) {
+                                setResult(sample.result as AnalysisResult);
+                              }
                             }}
                             className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-black hover:bg-gray-50 transition-all group text-left"
                           >

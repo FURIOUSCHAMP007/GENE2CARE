@@ -1,7 +1,5 @@
 # Gene2Care AI: Clinical Genomics Intelligence Platform
 
-https://youtu.be/JTAtPIiw_-Q?si=uohmZXLbZPupiL_j
-
 Gene2Care AI is an advanced clinical reasoning system designed to bridge the gap between raw genomic data and actionable medical care. By leveraging state-of-the-art LLM reasoning (Google Gemini), the platform transforms complex genetic variants into structured clinical insights for both healthcare providers and patients.
 
 ## 🧬 Core Workflow: The Biological Chain Reaction
